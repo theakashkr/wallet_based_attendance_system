@@ -1,0 +1,52 @@
+<!-- attendance/templates/attendance/base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Wallet-Based Attendance & Access Control System — Track attendance and manage credits.">
+    <title>{% block title %}WalletGuard{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'attendance/css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'dashboard' %}" class="nav-brand">
+                <span class="brand-icon">🛡️</span>
+                <span class="brand-text">WalletGuard</span>
+            </a>
+            <div class="nav-links">
+                {% if user.is_authenticated %}
+                    <span class="nav-user">
+                        <span class="user-avatar">{{ user.username|make_list|first|upper }}</span>
+                        {{ user.username }}
+                    </span>
+                    <form method="post" action="{% url 'logout' %}" class="nav-logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-ghost btn-sm">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-ghost btn-sm">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Toast Container (for notifications) -->
+    <div id="toast-container" class="toast-container"></div>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

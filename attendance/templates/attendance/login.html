@@ -1,0 +1,43 @@
+<!-- attendance/templates/attendance/login.html -->
+{% extends "attendance/base.html" %}
+
+{% block title %}Login — WalletGuard{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to access your dashboard</p>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-error">
+                <span class="alert-icon">⚠️</span>
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'login' %}" class="auth-form" id="login-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_username" class="form-label">Username</label>
+                <input type="text" name="username" id="id_username" class="form-input"
+                       placeholder="Enter your username" required autofocus autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="id_password" class="form-label">Password</label>
+                <input type="password" name="password" id="id_password" class="form-input"
+                       placeholder="Enter your password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="login-btn">
+                Sign In
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="{% url 'register' %}" class="link">Create one</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

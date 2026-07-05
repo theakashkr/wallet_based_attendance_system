@@ -1,0 +1,183 @@
+<!-- attendance/templates/attendance/qr_display.html -->
+{% extends "attendance/base.html" %}
+{% load static %}
+
+{% block title %}QR Code Display — WalletGuard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .qr-display-page {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 88px);
+        text-align: center;
+        padding: var(--space-xl);
+    }
+
+    .qr-container {
+        background: white;
+        border-radius: var(--radius-xl);
+        padding: var(--space-2xl);
+        box-shadow: var(--shadow-lg), 0 0 60px rgba(99, 102, 241, 0.15);
+        position: relative;
+        margin-bottom: var(--space-xl);
+    }
+
+    .qr-container img {
+        display: block;
+        width: 280px;
+        height: 280px;
+        image-rendering: pixelated;
+    }
+
+    .qr-title {
+        font-size: var(--font-2xl);
+        font-weight: 800;
+        margin-bottom: var(--space-sm);
+        background: var(--gradient-wallet);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .qr-subtitle {
+        color: var(--text-secondary);
+        font-size: var(--font-base);
+        margin-bottom: var(--space-2xl);
+    }
+
+    .qr-timer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-sm);
+        margin-top: var(--space-lg);
+        color: var(--text-secondary);
+        font-size: var(--font-sm);
+    }
+
+    .timer-bar {
+        width: 200px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-full);
+        overflow: hidden;
+    }
+
+    .timer-bar-fill {
+        height: 100%;
+        background: var(--gradient-wallet);
+        border-radius: var(--radius-full);
+        transition: width 1s linear;
+        width: 100%;
+    }
+
+    .qr-refresh-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-xs);
+        padding: var(--space-xs) var(--space-md);
+        background: var(--green-bg);
+        color: var(--green);
+        border-radius: var(--radius-full);
+        font-size: var(--font-xs);
+        font-weight: 600;
+        margin-top: var(--space-md);
+        animation: fade-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes fade-pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+
+    .qr-instructions {
+        max-width: 400px;
+        margin-top: var(--space-lg);
+        padding: var(--space-lg);
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        text-align: left;
+    }
+
+    .qr-instructions h3 {
+        font-size: var(--font-base);
+        font-weight: 600;
+        margin-bottom: var(--space-sm);
+    }
+
+    .qr-instructions ol {
+        padding-left: var(--space-lg);
+        color: var(--text-secondary);
+        font-size: var(--font-sm);
+        line-height: 1.8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="qr-display-page">
+    <h1 class="qr-title">Scan to Check In / Out</h1>
+    <p class="qr-subtitle">Point your camera at this QR code from the WalletGuard dashboard</p>
+
+    <div class="qr-container">
+        <img id="qr-code-img" src="/qr-image/" alt="Attendance QR Code">
+    </div>
+
+    <div class="qr-timer">
+        <span>Refreshes in:</span>
+        <div class="timer-bar">
+            <div class="timer-bar-fill" id="timer-bar-fill"></div>
+        </div>
+        <span id="timer-countdown">30s</span>
+    </div>
+
+    <div class="qr-refresh-badge">
+        <span>🔄</span> Auto-rotating every 30 seconds
+    </div>
+
+    <div class="qr-instructions">
+        <h3>📋 Instructions</h3>
+        <ol>
+            <li>Open your WalletGuard dashboard on your device</li>
+            <li>Click <strong>Check In</strong> or <strong>Check Out</strong></li>
+            <li>Point your camera at this QR code</li>
+            <li>Your attendance will be recorded automatically</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-refresh QR code every 30 seconds
+    const REFRESH_INTERVAL = 30; // seconds
+    let countdown = REFRESH_INTERVAL;
+
+    function refreshQR() {
+        const img = document.getElementById("qr-code-img");
+        // Append timestamp to bust browser cache
+        img.src = "/qr-image/?t=" + Date.now();
+        countdown = REFRESH_INTERVAL;
+    }
+
+    function updateTimer() {
+        countdown--;
+        const timerText = document.getElementById("timer-countdown");
+        const timerFill = document.getElementById("timer-bar-fill");
+
+        timerText.textContent = countdown + "s";
+        timerFill.style.width = ((countdown / REFRESH_INTERVAL) * 100) + "%";
+
+        if (countdown <= 0) {
+            refreshQR();
+        }
+    }
+
+    // Tick every second
+    setInterval(updateTimer, 1000);
+</script>
+{% endblock %}
