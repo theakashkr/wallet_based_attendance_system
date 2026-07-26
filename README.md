@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🛡️ WalletGuard — Wallet-Based Attendance & Access Control System
 
 A Django web application that tracks employee office attendance, calculates stay duration, and deducts credits from a virtual wallet. Users with insufficient credits are denied entry. Features **QR Code scan verification** for secure check-in/check-out.
@@ -172,3 +173,6 @@ Visit **http://127.0.0.1:8000/** 🎉
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+=======
+# wallet_based_attendance_system
+>>>>>>> 21ba2ec8000ab96eeacc53c99946fba562ae79ae

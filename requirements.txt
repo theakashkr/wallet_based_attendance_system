@@ -1,5 +1,6 @@
 django>=5.0,<6.0
 psycopg2-binary>=2.9.9
 qrcode[pil]>=8.0
+pip freeze > requirements.txt
 # If using MySQL instead of PostgreSQL, comment out psycopg2-binary and uncomment:
 # mysqlclient>=2.2.0

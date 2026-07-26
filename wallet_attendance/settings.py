@@ -39,6 +39,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = "wallet_attendance.urls"
@@ -117,7 +118,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript)
 # ---------------------------------------------------------------------------
 
-STATIC_URL = "static/"
+# STATIC_URL = "static/"
+
+STATIC_URL = '/static/'
+
+# The directory where collectstatic will gather your files for deployment
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
+
+# Tells Django to look in your local 'static' folder during development
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 # ---------------------------------------------------------------------------
 # Auth redirects
@@ -132,3 +143,4 @@ LOGOUT_REDIRECT_URL = "/login/"
 # ---------------------------------------------------------------------------
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
